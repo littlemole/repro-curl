@@ -33,7 +33,7 @@ LITTLE_MOLE_DEFINE_DEBUG_REF_CNT(ssl_connections)
 
 #ifdef MOL_PROMISE_DEBUG
 #define MOL_TEST_PRINT_CNTS()  \
-	    std::cerr << "promises:" << promises_g_count << std::endl; \
+	    std::cerr << "promises:" << repro::promises_g_count << std::endl; \
 	    std::cerr << "events:" << events_g_count << std::endl; \
 	    std::cerr << "timeouts:" << timeouts_g_count << std::endl; \
 	    std::cerr << "sockets:" << sockets_g_count << std::endl; \
@@ -50,7 +50,7 @@ LITTLE_MOLE_DEFINE_DEBUG_REF_CNT(ssl_connections)
 
 #ifdef MOL_PROMISE_DEBUG
 #define MOL_TEST_ASSERT_CNTS(p,e) \
-	    EXPECT_EQ(p,promises_g_count); \
+	    EXPECT_EQ(p,repro::promises_g_count); \
 	    EXPECT_EQ(e,events_g_count); \
 	    EXPECT_EQ(e,timeouts_g_count); \
 	    EXPECT_EQ(0,sockets_g_count); \

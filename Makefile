@@ -50,7 +50,7 @@ build: ## copy artefacts to ./build
 # make install copies the lib to system folders
 #################################################
 
-install: ## installs lib to $(DESTDIR)/$(PREFIX) defaults to /usr/local
+install: remove ## installs lib to $(DESTDIR)/$(PREFIX) defaults to /usr/local
 	-rm -rf $(DESTDIR)/$(PREFIX)/include/$(LIBNAME)
 	cd src && make clean && make -e -f Makefile 
 	cd t && make clean && make -e -f Makefile 
