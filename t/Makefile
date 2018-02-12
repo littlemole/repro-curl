@@ -28,12 +28,12 @@ OPTIONS = -g -fpic -Wno-write-strings -pthread -D_REENTRANT $(DEFAULT_OPTS) $(PK
 CPPFLAGS = -Wall -I../include $(DEBUG) $(OPTIONS) $(PROMISE_IMPL)
 
 # target
-LIB = ../src/build/libreprocurld.a
-release : override LIB = ../src/build/libreprocurl.a
+LIB = ../src/build/libreprocurld.a -lpriocppd
+release : override LIB = ../src/build/libreprocurl.a -lpriocpp
 
 TEST_SRC   = .
 TEST_BUILD = ./build
-TEST_LIBS  = $(LIB) /usr/lib/libgtest.a -lpthread -lpriocppd  $(PKG_LIB) $(PROMISE_3DPARTY)
+TEST_LIBS  = $(LIB) /usr/lib/libgtest.a -lpthread  $(PKG_LIB) $(PROMISE_3DPARTY)
 
 
 # Objects for the test executable
