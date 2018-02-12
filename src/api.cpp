@@ -1,9 +1,14 @@
 #include "reprocurl/api.h"
+#include <curl/curl.h>
 
 using namespace prio;
  
 namespace reprocurl {
 
+void init()
+{
+	curl_global_init(CURL_GLOBAL_ALL);
+}
  
 request::request()
 	: method_("GET"), url_("/")

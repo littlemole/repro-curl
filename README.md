@@ -1,7 +1,13 @@
-csgi - C server gateway interface
-=================================
+# repro-curl
 
-non blocking HTTP with raw modern c++.
+c++ reactive curl wrapper with promises
 
-disclaimer: this is an academic study only.
+# dependencies
 
+priocpp, reprocpp and lo and behold libcurl.
+
+# api
+
+# install
+
+# win32

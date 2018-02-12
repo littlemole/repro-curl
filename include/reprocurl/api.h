@@ -51,6 +51,7 @@ private:
 	CurlEasy::Ptr curl_;
 };
 
+void init();
 
 }
 

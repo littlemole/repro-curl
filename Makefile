@@ -37,7 +37,7 @@ clean: ## cleans up build artefacts
 #################################################	
 	
 test: all test-build ## runs unit tests
-	./t/build/test.bin
+	bash -c 'BINS=$$(ls t/build/*.bin); for i in $$BINS; do $$i; if [ "$$?" != "0" ]; then echo "testrunner FAILED"; exit 1; fi; done; echo "testrunner OK";'
 
 build: ## copy artefacts to ./build
 	mkdir -p ./build/include

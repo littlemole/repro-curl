@@ -3,7 +3,7 @@ release : override DEBUG = -O3
 
 LIBEVENT=$(shell pkg-config libevent_pthreads --libs)
 PKG_INC=$(shell pkg-config priocpp openssl libnghttp2 libcurl --cflags)
-PKG_LIB=$(shell pkg-config priocpp openssl libnghttp2 libcurl --libs)
+PKG_LIB=$(shell pkg-config openssl libnghttp2 libcurl --libs)
 
 # if not g++ we assume clang++
 DEFAULT_LIBS = -stdlib=libc++ -fcoroutines-ts  -lc++abi -std=c++14 
@@ -33,7 +33,7 @@ release : override LIB = ../src/build/libreprocurl.a
 
 TEST_SRC   = .
 TEST_BUILD = ./build
-TEST_LIBS  = $(LIB) /usr/lib/libgtest.a -lpthread   $(PKG_LIB) $(PROMISE_3DPARTY)
+TEST_LIBS  = $(LIB) /usr/lib/libgtest.a -lpthread -lpriocppd  $(PKG_LIB) $(PROMISE_3DPARTY)
 
 
 # Objects for the test executable

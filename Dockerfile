@@ -28,7 +28,7 @@ RUN ln -s /usr/include/libcxxabi/__cxxabi_config.h /usr/include/c++/v1/__cxxabi_
 ARG CXX=g++
 ENV CXX=${CXX}
 
-ARG BACKEND=
+ARG BACKEND=libevent
 ENV BACKEND=${BACKEND}
 
 # compile gtest with given compiler
@@ -46,26 +46,26 @@ RUN cd /usr/local/src && \
   git clone https://github.com/littlemole/repro.git && \
   cd repro && \
   make clean && \
-  make CXX=${CXX} && \
-  make CXX=${CXX} test && \
-  make CXX=${CXX} install 
+  make CXX=${CXX} BACKEND=${BACKEND} && \
+  make CXX=${CXX} BACKEND=${BACKEND} test && \
+  make CXX=${CXX} BACKEND=${BACKEND} install 
 
 
 RUN cd /usr/local/src && \
   git clone https://github.com/littlemole/cryptoneat.git && \
   cd cryptoneat && \
   make clean && \
-  make CXX=${CXX} && \
-  make CXX=${CXX} test && \
-  make CXX=${CXX} install 
+  make CXX=${CXX} BACKEND=${BACKEND} && \
+  make CXX=${CXX} BACKEND=${BACKEND} test && \
+  make CXX=${CXX} BACKEND=${BACKEND} install 
   
 RUN cd /usr/local/src && \
   git clone https://github.com/littlemole/prio.git && \
   cd prio && \
   make clean && \
-  make CXX=${CXX} && \
-  make CXX=${CXX} test && \
-  make CXX=${CXX} install 
+  make CXX=${CXX} BACKEND=${BACKEND} && \
+  make CXX=${CXX} BACKEND=${BACKEND} test && \
+  make CXX=${CXX} BACKEND=${BACKEND} install 
 
 
 RUN mkdir -p /opt/workspace/reprocurl
