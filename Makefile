@@ -35,9 +35,12 @@ clean: ## cleans up build artefacts
 #################################################
 # make test runs the unit tests
 #################################################	
+
+run-tests:
+	bash -c 'BINS=$$(ls t/build/*.bin); for i in $$BINS; do $$i; if [ "$$?" != "0" ]; then echo "testrunner FAILED"; exit 1; fi; done; echo "testrunner OK";'
 	
 test: all test-build ## runs unit tests
-	bash -c 'BINS=$$(ls t/build/*.bin); for i in $$BINS; do $$i; if [ "$$?" != "0" ]; then echo "testrunner FAILED"; exit 1; fi; done; echo "testrunner OK";'
+	make run-tests
 
 build: ## copy artefacts to ./build
 	mkdir -p ./build/include
@@ -54,10 +57,12 @@ install: remove ## installs lib to $(DESTDIR)/$(PREFIX) defaults to /usr/local
 	-rm -rf $(DESTDIR)/$(PREFIX)/include/$(LIBNAME)
 	cd src && make clean && make -e -f Makefile 
 	cd t && make clean && make -e -f Makefile 
+	make run-tests
 	make build
 	cp -r ./build/* $(DESTDIR)/$(PREFIX)	
 	cd src && make clean && make release -e -f Makefile 
 	cd t && make clean && make release -e -f Makefile 
+	make run-tests
 	make build
 	cp -r ./build/* $(DESTDIR)/$(PREFIX)	
 

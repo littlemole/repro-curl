@@ -24,7 +24,7 @@ ifeq ($(BACKEND),boost_asio)
 endif
 
 #final cpp options
-OPTIONS = -g -fpic -Wno-write-strings -pthread -D_REENTRANT $(DEFAULT_OPTS) $(PKG_INC)
+OPTIONS =  -pthread -D_REENTRANT $(DEFAULT_OPTS) $(PKG_INC)
 CPPFLAGS = -Wall -I../include $(DEBUG) $(OPTIONS) $(PROMISE_IMPL)
 
 # target

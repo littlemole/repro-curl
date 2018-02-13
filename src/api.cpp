@@ -112,7 +112,7 @@ Future<response> fetch(request& req)
 	}
 
 	curl->perform()
-		.then([p](CurlEasy::Ptr curl)
+	.then([p](CurlEasy::Ptr curl)
 	{
 		p.resolve(response(curl));
 	})
