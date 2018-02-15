@@ -6,4 +6,4 @@ Name: repro-curl
 Description: reactive c++ curl client wrapper with promises
 Version: 0.0.1
 Cflags: -I${includedir}
-Libs: -L${libdir} -lreprocurl -lpriocpp -lcurl -lnghttp2 -lssl -lcrypto -lpthread 
+Libs: -L${libdir} -lreprocurl -lpriocpp -lcurl -lssl -lcrypto -lpthread 
