@@ -109,7 +109,7 @@ TEST_F(BasicTest, asyncTest)
 #endif
 		signal(SIGINT).then([](int s) { theLoop().exit(); });
 
-		coroutine_example();
+		coroutine_example().then([](){});
 
 		theLoop().run();
 		curl_multi().dispose();
