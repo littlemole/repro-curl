@@ -1,6 +1,6 @@
 
 DEBUG = -g -DMOL_PROMISE_DEBUG
-release : override DEBUG = -O3
+release : override DEBUG = -O3 
 
 DEFAULT_OPTS = -std=c++14
 
