@@ -68,7 +68,12 @@ RUN cd /usr/local/src && \
   make CXX=${CXX} BACKEND=${BACKEND} install 
 
 
-RUN mkdir -p /opt/workspace/reprocurl
+RUN mkdir -p /usr/local/src/reprocurl
+
+ADD . /usr/local/src/reprocurl
 
 ADD docker/run.sh /usr/local/bin/run.sh
-CMD ["/usr/local/bin/run.sh"]
+
+RUN /usr/local/bin/run.sh
+
+

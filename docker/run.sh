@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /opt/workspace/reprocurl
+cd /usr/local/src/reprocurl
 make clean
 make -e install
 
