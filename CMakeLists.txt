@@ -7,6 +7,29 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(GTest REQUIRED)
+find_package(OpenSSL REQUIRED)
+
+############################################
+# clang support
+############################################
+
+set(LINKERFLAGS "")
+set(STDLIB "")
+set(FLAGS "")
+
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(STDLIB "c++abi")
+    set(LINKERFLAGS "-stdlib=libc++ -fcoroutines-ts  -std=c++14")
+    set(FLAGS "-stdlib=libc++ -fcoroutines-ts -D_RESUMABLE_FUNCTIONS_SUPPORTED")
+endif()
+
+set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${LINKERFLAGS}" )
+
+message(" COMPILER: ${CMAKE_CXX_COMPILER_ID}")
+message(" FLAGS: ${FLAGS}")
+
 ############################################
 # OS support
 ############################################
@@ -16,39 +39,35 @@ IF (WIN32)
 
 	set(OSLIBS "Ws2_32" "Rpcrt4")
 
-    find_package(gtest REQUIRED)
-    find_package(openssl REQUIRED)
 	find_library(CURL_LIBRARY NAMES libcurl)
 	find_library(NG2HTTP_LIBRARY NAMES nghttp2)
 	find_library(LIBEVENT_LIBRARY NAMES event)
 
-	set(BUILDFLAGS "-await")
-	set(DEBUGFLAGS "-DMOL_PROMISE_DEBUG")
+	set(BUILDFLAGS "-await ${FLAGS}")
+	set(DEBUGFLAGS -DMOL_PROMISE_DEBUG)
 
-	set(LIBS ${CRYPTONEAT_LIBRARY} ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY}  )
+	set(LIBS ${CRYPTONEAT_LIBRARY} ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY} ${STDLIB}  )
 
  ELSEIF(UNIX)
 
     set(OSLIBS "pthread")
 
     find_package(PkgConfig)
-    pkg_check_modules(GTEST REQUIRED gtest)
-    pkg_check_modules(OPENSSL REQUIRED openssl)
     pkg_check_modules(CURL REQUIRED libcurl)
     pkg_check_modules(NGHTTP2 REQUIRED libnghttp2)
     pkg_check_modules(PRIOCPP REQUIRED priocpp)
     pkg_check_modules(LIBEVENT REQUIRED libevent_pthreads)
 
-    set(OPENSSL_INCLUDE_DIR ${OPENSSL_INCLUDE_DIRS} ${PRIOCPP_INCLUDE_DIRS})
 	set(LIBEVENT_LIBRARY ${LIBEVENT_LIBRARIES})
 
-    set(BUILDFLAGS "${GTEST_CFLAGS_OTHER}")
-	set(DEBUGFLAGS "-g -DMOL_PROMISE_DEBUG")
+    set(BUILDFLAGS " ${FLAGS}")
+	set(DEBUGFLAGS -g -DMOL_PROMISE_DEBUG)
 
-	set(LIBS ${PRIOCPP_LIBRARIES} ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NGHTTP2_LIBRARIES} ${CURL_LIBRARIES} )
+	set(LIBS ${PRIOCPP_LIBRARIES} ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NGHTTP2_LIBRARIES} ${CURL_LIBRARIES} ${STDLIB} )
 ENDIF ()
 
-
+message(">>>>>>>>>>> ${GTEST_CFLAGS_OTHER}")
+message(">>>>>>>>>>> ${BUILDFLAGS}")
 ############################################
 # macros
 ############################################

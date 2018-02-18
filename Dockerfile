@@ -28,52 +28,26 @@ RUN ln -s /usr/include/libcxxabi/__cxxabi_config.h /usr/include/c++/v1/__cxxabi_
 ARG CXX=g++
 ENV CXX=${CXX}
 
+# compile gtest with given compiler
+ADD ./docker/gtest.sh /usr/local/bin/gtest.sh
+RUN /usr/local/bin/gtest.sh
+
 ARG BACKEND=libevent
 ENV BACKEND=${BACKEND}
 
-# compile gtest with given compiler
-RUN  cd /usr/src/gtest && \
-  if [ "$CXX" = "g++" ] ; then \
-  cmake .; \
-  else \
-  cmake -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_CXX_FLAGS="-std=c++14 -stdlib=libc++" . ; \
-  fi && \
-  make && \
-  ln -s /usr/src/gtest/libgtest.a /usr/lib/libgtest.a
+ARG BUILDCHAIN=make
+ENV BUILDCHAIN=${BUILDCHAIN}
 
+# build dependencies
+ADD ./docker/build.sh /usr/local/bin/build.sh
+ADD ./docker/install.sh /usr/local/bin/install.sh
 
-RUN cd /usr/local/src && \
-  git clone https://github.com/littlemole/repro.git && \
-  cd repro && \
-  make clean && \
-  make CXX=${CXX} BACKEND=${BACKEND} && \
-  make CXX=${CXX} BACKEND=${BACKEND} test && \
-  make CXX=${CXX} BACKEND=${BACKEND} install 
+RUN /usr/local/bin/install.sh cryptoneat 
+RUN /usr/local/bin/install.sh repro 
+RUN /usr/local/bin/install.sh prio
 
+# build an install this project
+RUN mkdir -p /usr/local/src/repro-curl
+ADD . /usr/local/src/repro-curl
 
-RUN cd /usr/local/src && \
-  git clone https://github.com/littlemole/cryptoneat.git && \
-  cd cryptoneat && \
-  make clean && \
-  make CXX=${CXX} BACKEND=${BACKEND} && \
-  make CXX=${CXX} BACKEND=${BACKEND} test && \
-  make CXX=${CXX} BACKEND=${BACKEND} install 
-  
-RUN cd /usr/local/src && \
-  git clone https://github.com/littlemole/prio.git && \
-  cd prio && \
-  make clean && \
-  make CXX=${CXX} BACKEND=${BACKEND} && \
-  make CXX=${CXX} BACKEND=${BACKEND} test && \
-  make CXX=${CXX} BACKEND=${BACKEND} install 
-
-
-RUN mkdir -p /usr/local/src/reprocurl
-
-ADD . /usr/local/src/reprocurl
-
-ADD docker/run.sh /usr/local/bin/run.sh
-
-RUN /usr/local/bin/run.sh
-
-
+RUN /usr/local/bin/build.sh repro-curl 
