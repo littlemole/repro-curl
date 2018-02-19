@@ -6,7 +6,8 @@ MAINTAINER me <little.mole@oha7.org>
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential g++ \
-libgtest-dev cmake git pkg-config valgrind sudo joe wget 
+libgtest-dev cmake git pkg-config valgrind sudo joe wget \
+openssl libssl-dev libevent-dev uuid-dev
 
 # clang++-5.0 dependencies
 RUN echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main" >> /etc/apt/sources.list
@@ -16,8 +17,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 clang-5.0 lldb-5.0 lld-5.0 libc++-dev libc++abi-dev \
-openssl libssl-dev libevent-dev uuid-dev \
-nghttp2 libnghttp2-dev wget \
+nghttp2 libnghttp2-dev \
 libboost-dev libboost-system-dev libcurl4-openssl-dev
 
 
