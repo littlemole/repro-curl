@@ -50,4 +50,4 @@ RUN /usr/local/bin/install.sh prio
 RUN mkdir -p /usr/local/src/repro-curl
 ADD . /usr/local/src/repro-curl
 
-RUN /usr/local/bin/build.sh repro-curl 
+RUN SKIPTESTS=true /usr/local/bin/build.sh repro-curl 
