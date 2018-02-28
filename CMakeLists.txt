@@ -3,8 +3,6 @@ cmake_minimum_required(VERSION 2.8.9)
 project(reprocurl)
 include(CTest)
 
-set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/lib/CMake")
-
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -47,8 +45,8 @@ IF (WIN32)
 	find_library(CURL_LIBRARY NAMES libcurl)
 	find_library(NG2HTTP_LIBRARY NAMES nghttp2)
 	find_library(LIBEVENT_LIBRARY NAMES event)
-    find_library(PRIOCPP_LIBRARY NAMES priocpp)
-    find_library(PRIOCPPD_LIBRARY NAMES priocppd)
+    	find_library(PRIOCPP_LIBRARY NAMES priocpp)
+    	find_library(PRIOCPPD_LIBRARY NAMES priocppd)
 
 	set(BUILDFLAGS "-await ${FLAGS}")
 	set(DEBUGFLAGS -DMOL_PROMISE_DEBUG)
@@ -72,11 +70,10 @@ IF (WIN32)
     find_package(PkgConfig)
     pkg_check_modules(CURL REQUIRED libcurl)
     pkg_check_modules(NGHTTP2 REQUIRED libnghttp2)
-#    pkg_check_modules(PRIOCPP REQUIRED priocpp)
-    find_package(priocpp)
+    pkg_check_modules(PRIOCPP REQUIRED priocpp)
     pkg_check_modules(LIBEVENT REQUIRED libevent_pthreads)
 
-	set(LIBEVENT_LIBRARY ${LIBEVENT_LIBRARIES})
+    set(LIBEVENT_LIBRARY ${LIBEVENT_LIBRARIES})
 
     set(BUILDFLAGS " ${FLAGS}")
 	set(DEBUGFLAGS "-g -DMOL_PROMISE_DEBUG")
@@ -176,4 +173,3 @@ install(FILES ${HEADERS} DESTINATION include/reprocurl)
 
 install(FILES reprocurl.pc DESTINATION lib/pkgconfig)
 
-install(FILES reprocurl-config.cmake DESTINATION "lib/CMake/reprocurl" COMPONENT dev)
