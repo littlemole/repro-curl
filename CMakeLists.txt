@@ -45,8 +45,8 @@ IF (WIN32)
 	find_library(CURL_LIBRARY NAMES libcurl)
 	find_library(NG2HTTP_LIBRARY NAMES nghttp2)
 	find_library(LIBEVENT_LIBRARY NAMES event)
-    	find_library(PRIOCPP_LIBRARY NAMES priocpp)
-    	find_library(PRIOCPPD_LIBRARY NAMES priocppd)
+    find_library(PRIOCPP_LIBRARY NAMES priocpp)
+    find_library(PRIOCPPD_LIBRARY NAMES priocppd)
 
 	set(BUILDFLAGS "-await ${FLAGS}")
 	set(DEBUGFLAGS -DMOL_PROMISE_DEBUG)
@@ -78,7 +78,7 @@ IF (WIN32)
     set(BUILDFLAGS " ${FLAGS}")
 	set(DEBUGFLAGS "-g -DMOL_PROMISE_DEBUG")
 
-	set(LIBS priocppd ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NGHTTP2_LIBRARIES} ${CURL_LIBRARIES} ${STDLIB} )
+	set(LIBS reprocurld priocppd ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NGHTTP2_LIBRARIES} ${CURL_LIBRARIES} ${STDLIB} )
 ENDIF ()
 
 ############################################
@@ -119,23 +119,24 @@ endif()
 
 include_directories(include)
 include_directories(${OPENSSL_INCLUDE_DIR})
+include_directories(${PRIOCPP_INCLUDE_DIRS})
 
 file(GLOB SOURCES "src/*.cpp")
-file(GLOB HEADERS "include/reprocurl/*.h")
+file(GLOB HEADERS "include/${CMAKE_PROJECT_NAME}/*.h")
 
 ############################################
 # targets
 ############################################
 
-add_library(reprocurl  STATIC ${SOURCES})
-add_library(reprocurld STATIC ${SOURCES})
+add_library(${CMAKE_PROJECT_NAME}  STATIC ${SOURCES})
+add_library(${CMAKE_PROJECT_NAME}d STATIC ${SOURCES})
 
 add_executable(Tests t/test.cpp)
 
-AddCompilerFlags(reprocurl ${BUILDFLAGS})
+AddCompilerFlags(${CMAKE_PROJECT_NAME} ${BUILDFLAGS})
 
-AddCompilerFlags(reprocurld ${BUILDFLAGS})
-AddCompilerFlags(reprocurld ${DEBUGFLAGS})
+AddCompilerFlags(${CMAKE_PROJECT_NAME}d ${BUILDFLAGS})
+AddCompilerFlags(${CMAKE_PROJECT_NAME}d ${DEBUGFLAGS})
 
 AddCompilerFlags(Tests ${BUILDFLAGS})
 AddCompilerFlags(Tests ${DEBUGFLAGS})
@@ -161,15 +162,15 @@ file(COPY pem DESTINATION .)
 ############################################
  
 if( "${INSTALL_RELEASE}" STREQUAL "On")
-	install(TARGETS reprocurl DESTINATION lib)
+	install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION lib)
 endif()
 
 if( "${INSTALL_DEBUG}" STREQUAL "On")
-	install(TARGETS reprocurld DESTINATION lib)
+	install(TARGETS ${CMAKE_PROJECT_NAME}d DESTINATION lib)
 endif()
 
 
-install(FILES ${HEADERS} DESTINATION include/reprocurl)
+install(FILES ${HEADERS} DESTINATION include/${CMAKE_PROJECT_NAME})
 
-install(FILES reprocurl.pc DESTINATION lib/pkgconfig)
+install(FILES ${CMAKE_PROJECT_NAME}.pc DESTINATION lib/pkgconfig)
 
