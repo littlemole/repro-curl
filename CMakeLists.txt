@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(INSTALL_DEBUG "On")
+set(INSTALL_RELEASE "On")
+
 find_package(GTest REQUIRED)
 find_package(OpenSSL REQUIRED)
 
@@ -44,17 +47,23 @@ IF (WIN32)
 	find_library(CURL_LIBRARY NAMES libcurl)
 	find_library(NG2HTTP_LIBRARY NAMES nghttp2)
 	find_library(LIBEVENT_LIBRARY NAMES event)
-    find_library(PRIOCPP_LIBRARY NAMES priocppd)
+    find_library(PRIOCPP_LIBRARY NAMES priocpp)
+    find_library(PRIOCPPD_LIBRARY NAMES priocppd)
 
 	set(BUILDFLAGS "-await ${FLAGS}")
 	set(DEBUGFLAGS -DMOL_PROMISE_DEBUG)
 
-message("${CURL_LIBRARY}")
-message("${NG2HTTP_LIBRARY}")
-message("${LIBEVENT_LIBRARY}")
-message("${PRIOCPP_LIBRARY}")
+	set(LIBS ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY} ${STDLIB}  )
 
-	set(LIBS ${PRIOCPP_LIBRARY} ${CRYPTONEAT_LIBRARY} ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY} ${STDLIB}  )
+	if( "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+		set(INSTALL_DEBUG "Off")
+		set(LIBS ${LIBS} ${CMAKE_PROJECT_NAME} ${PRIOCPP_LIBRARY} )
+		set(DEBUGFLAGS " ")
+	else()
+		set(INSTALL_RELEASE "Off")
+		set(LIBS ${LIBS} ${CMAKE_PROJECT_NAME}d ${PRIOCPPD_LIBRARY} )
+		set(DEBUGFLAGS "-DMOL_PROMISE_DEBUG ")
+	endif()
 
  ELSEIF(UNIX)
 
@@ -75,8 +84,6 @@ message("${PRIOCPP_LIBRARY}")
 	set(LIBS priocppd ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NGHTTP2_LIBRARIES} ${CURL_LIBRARIES} ${STDLIB} )
 ENDIF ()
 
-message(">>>>>>>>>>> ${GTEST_CFLAGS_OTHER}")
-message(">>>>>>>>>>> ${BUILDFLAGS}")
 ############################################
 # macros
 ############################################
@@ -141,7 +148,7 @@ AddCompilerFlags(Tests ${DEBUGFLAGS})
 # libs
 ############################################
 
-target_link_libraries(Tests reprocurld ${LIBS} ${BACKEND} ${OSLIBS} )
+target_link_libraries(Tests ${LIBS} ${BACKEND} ${OSLIBS} )
 
 
 ############################################
@@ -156,8 +163,14 @@ file(COPY pem DESTINATION .)
 # install rules
 ############################################
  
-install(TARGETS reprocurl DESTINATION lib)
-install(TARGETS reprocurld DESTINATION lib)
+if( "${INSTALL_RELEASE}" STREQUAL "On")
+	install(TARGETS reprocurl DESTINATION lib)
+endif()
+
+if( "${INSTALL_DEBUG}" STREQUAL "On")
+	install(TARGETS reprocurld DESTINATION lib)
+endif()
+
 
 install(FILES ${HEADERS} DESTINATION include/reprocurl)
 
