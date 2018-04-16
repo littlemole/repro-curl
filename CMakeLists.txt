@@ -1,17 +1,34 @@
 ############################################
+# preamble
+############################################
 cmake_minimum_required(VERSION 2.8.9)
+cmake_policy(SET CMP0054 NEW)
 project(reprocurl)
 include(CTest)
+
+############################################
+# c++ std
+############################################
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(INSTALL_DEBUG "On")
-set(INSTALL_RELEASE "On")
+############################################
+# debug mode produces libs with d suffix
+############################################
+
+if(NOT CMAKE_DEBUG_POSTFIX)
+  set(CMAKE_DEBUG_POSTFIX d)
+endif()
+
+############################################
+# basic dependecies
+############################################
 
 find_package(GTest REQUIRED)
 find_package(OpenSSL REQUIRED)
+
 
 ############################################
 # clang support
@@ -28,42 +45,31 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(FLAGS "-stdlib=libc++ -fcoroutines-ts -D_RESUMABLE_FUNCTIONS_SUPPORTED")
 endif()
 
-set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${LINKERFLAGS}" )
 
-message(" COMPILER: ${CMAKE_CXX_COMPILER_ID}")
-message(" FLAGS: ${FLAGS}")
 
 ############################################
-# OS support
+# OS support (Linux/Windows)
 ############################################
-
 
 IF (WIN32)
 
 	set(OSLIBS "Ws2_32" "Rpcrt4")
 
+	find_library(LIBEVENT_LIBRARY NAMES event)
 	find_library(CURL_LIBRARY NAMES libcurl)
 	find_library(NG2HTTP_LIBRARY NAMES nghttp2)
 	find_library(LIBEVENT_LIBRARY NAMES event)
     find_library(PRIOCPP_LIBRARY NAMES priocpp)
     find_library(PRIOCPPD_LIBRARY NAMES priocppd)
 
+
 	set(BUILDFLAGS "-await ${FLAGS}")
-	set(DEBUGFLAGS -DMOL_PROMISE_DEBUG)
 
-	set(LIBS ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY} ${STDLIB}  )
+	set(LIBS ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY} debug ${PRIOCPPD_LIBRARY} optimized ${PRIOCPP_LIBRARY} ${STDLIB}  )
 
-	if( "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-		set(INSTALL_DEBUG "Off")
-		set(LIBS ${LIBS} ${CMAKE_PROJECT_NAME} ${PRIOCPP_LIBRARY} )
-		set(DEBUGFLAGS " ")
-	else()
-		set(INSTALL_RELEASE "Off")
-		set(LIBS ${LIBS} ${CMAKE_PROJECT_NAME}d ${PRIOCPPD_LIBRARY} )
-		set(DEBUGFLAGS "-DMOL_PROMISE_DEBUG ")
-	endif()
+	set(LIBS ${LIBS} debug ${CMAKE_PROJECT_NAME} optimized ${CMAKE_PROJECT_NAME} )
 
- ELSEIF(UNIX)
+ ELSEIF (UNIX)
 
     set(OSLIBS "pthread")
 
@@ -76,82 +82,75 @@ IF (WIN32)
     set(LIBEVENT_LIBRARY ${LIBEVENT_LIBRARIES})
 
     set(BUILDFLAGS " ${FLAGS}")
-	set(DEBUGFLAGS "-g -DMOL_PROMISE_DEBUG")
 
-	set(LIBS reprocurld priocppd ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NGHTTP2_LIBRARIES} ${CURL_LIBRARIES} ${STDLIB} )
+	set(LIBS ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY} debug ${PRIOCPPD_LIBRARY} optimized ${PRIOCPP_LIBRARY} ${STDLIB}  )
+
+	set(LIBS ${LIBS} debug ${CMAKE_PROJECT_NAME} optimized ${CMAKE_PROJECT_NAME} )
+
 ENDIF ()
 
-############################################
-# macros
-############################################
-
-macro(AddCompilerFlags target flags)
-    get_target_property(CF ${target} COMPILE_FLAGS)
-    if(CF STREQUAL "CF-NOTFOUND")
-        SET(CF "") # set to empty string
-    else()
-        SET(CF "${CF} ") # a space to cleanly separate from existing content
-    endif()
-
-    SET(CF "${CF} ${flags}" )
-    set_target_properties(${target} PROPERTIES COMPILE_FLAGS ${CF} )
-endmacro()
 
 ############################################
-# defaults
+# set linker and compiler flags
 ############################################
 
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${LINKERFLAGS}" )
+set(CMAKE_CXX_FLAGS_DEBUG  	"${CMAKE_CXX_FLAGS_DEBUG} -DMOL_PROMISE_DEBUG")
+set(CMAKE_CXX_FLAGS  		"${CMAKE_CXX_FLAGS} ${BUILDFLAGS}")
 
-set(BACKEND ${LIBEVENT_LIBRARY})
+
+############################################
+# backend: libevent or boost_asio
+############################################
+
 
 option(WITH_LIBEVENT "use libevent (default:on)" ON)
 if(WITH_LIBEVENT)
-    add_definitions(-DPROMISE_USE_LIBEVENT)
+    add_definitions(-DPROMISE_USE_LIBEVENT)    
+    set(BACKEND ${LIBEVENT_LIBRARY})
 else()
     add_definitions(-DPROMISE_USE_BOOST_ASIO)
     set(BACKEND "boost_system")
 endif()
 
-
 ############################################
-# sources
+# include directories
 ############################################
 
 include_directories(include)
 include_directories(${OPENSSL_INCLUDE_DIR})
 include_directories(${PRIOCPP_INCLUDE_DIRS})
 
+
+############################################
+# sources
+############################################
+
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB HEADERS "include/${CMAKE_PROJECT_NAME}/*.h")
 
 ############################################
-# targets
+# lib target
 ############################################
 
 add_library(${CMAKE_PROJECT_NAME}  STATIC ${SOURCES})
-add_library(${CMAKE_PROJECT_NAME}d STATIC ${SOURCES})
-
-add_executable(Tests t/test.cpp)
-
-AddCompilerFlags(${CMAKE_PROJECT_NAME} ${BUILDFLAGS})
-
-AddCompilerFlags(${CMAKE_PROJECT_NAME}d ${BUILDFLAGS})
-AddCompilerFlags(${CMAKE_PROJECT_NAME}d ${DEBUGFLAGS})
-
-AddCompilerFlags(Tests ${BUILDFLAGS})
-AddCompilerFlags(Tests ${DEBUGFLAGS})
-
-
-############################################
-# libs
-############################################
-
-target_link_libraries(Tests ${LIBS} ${BACKEND} ${OSLIBS} )
-
 
 ############################################
 # tests
 ############################################
+
+add_executable(Tests t/test.cpp)
+
+############################################
+# libs for tests
+############################################
+
+target_link_libraries(Tests ${LIBS} ${BACKEND} ${OSLIBS} )
+
+############################################
+# run tests
+############################################
+
 
 add_test(NAME AllTests COMMAND Tests)
 
@@ -160,17 +159,12 @@ file(COPY pem DESTINATION .)
 ############################################
 # install rules
 ############################################
- 
-if( "${INSTALL_RELEASE}" STREQUAL "On")
-	install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION lib)
-endif()
 
-if( "${INSTALL_DEBUG}" STREQUAL "On")
-	install(TARGETS ${CMAKE_PROJECT_NAME}d DESTINATION lib)
-endif()
-
+install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION lib)
 
 install(FILES ${HEADERS} DESTINATION include/${CMAKE_PROJECT_NAME})
 
 install(FILES ${CMAKE_PROJECT_NAME}.pc DESTINATION lib/pkgconfig)
+
+
 
