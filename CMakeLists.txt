@@ -83,9 +83,9 @@ IF (WIN32)
 
     set(BUILDFLAGS " ${FLAGS}")
 
-	set(LIBS ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARY} debug ${PRIOCPPD_LIBRARY} optimized ${PRIOCPP_LIBRARY} ${STDLIB}  )
+    set(LIBS debug priocpp optimized priocpp ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARIES} ${STDLIB}  )
 
-	set(LIBS ${LIBS} debug ${CMAKE_PROJECT_NAME} optimized ${CMAKE_PROJECT_NAME} )
+    set(LIBS debug ${CMAKE_PROJECT_NAME} optimized ${CMAKE_PROJECT_NAME} ${LIBS} )
 
 ENDIF ()
 
@@ -144,6 +144,9 @@ add_executable(Tests t/test.cpp)
 ############################################
 # libs for tests
 ############################################
+message("${LIBS}")
+message("${BACKEND}")
+message("${OSLIBS}")
 
 target_link_libraries(Tests ${LIBS} ${BACKEND} ${OSLIBS} )
 
