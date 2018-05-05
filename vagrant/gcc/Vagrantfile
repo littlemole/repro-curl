@@ -118,7 +118,7 @@ Vagrant.configure("2") do |config|
      /etc/init.d/apache2 restart
 
 	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
-	 echo "promise-clang ready. "
+	 echo "promise-g++ ready. "
 	 echo "run 'vagrant ssh' now. "
 	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
 

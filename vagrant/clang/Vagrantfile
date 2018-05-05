@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "ubuntu/bionic64"
   config.vm.hostname = "repro-clang"
   config.vm.define "repro-clang"
   config.vm.provider :virtualbox do |vb|
@@ -87,27 +87,14 @@ Vagrant.configure("2") do |config|
           libevent-dev pkg-config libhiredis-dev libsqlite3-dev libmagic-dev \
           valgrind sudo openssl libssl-dev joe graphite-web graphite-carbon \
           apache2 libapache2-mod-wsgi uuid-dev mysql-client libmysqlclient-dev \
-          nghttp2 libnghttp2-dev wget
-
-	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
-	 echo "CLANG5"
-	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
-
-	 echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main" >> /etc/apt/sources.list
-	 wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add -
-
-	 DEBIAN_FRONTEND=noninteractive apt-get update
-	 DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        devscripts debhelper libboost-dev libboost-system-dev clang-5.0 lldb-5.0 lld-5.0 libc++-dev libc++abi-dev
-
-	 ln -s /usr/include/c++/v1/cxxabi.h /usr/include/c++/v1/__cxxabi.h
-	 ln -s /usr/include/libcxxabi/__cxxabi_config.h /usr/include/c++/v1/__cxxabi_config.h
+          nghttp2 libnghttp2-dev wget \
+          devscripts debhelper libboost-dev libboost-system-dev clang libc++-dev libc++abi-dev
 
 	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
 	 echo "GTEST"
 	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
 
-     cd /usr/src/gtest && cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -DCMAKE_CXX_FLAGS="-std=c++14 -stdlib=libc++" . && \
+     cd /usr/src/gtest && cmake -DCMAKE_CXX_COMPILER="clang++" -DCMAKE_CXX_FLAGS="-std=c++14 -stdlib=libc++" . && \
          make && \
          ln -s /usr/src/gtest/libgtest.a /usr/lib/libgtest.a
 
@@ -116,7 +103,7 @@ Vagrant.configure("2") do |config|
 	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
 
 	 cd /usr/local/src && git clone https://github.com/open-source-parsers/jsoncpp.git 
-	 cd /usr/local/src/jsoncpp && cmake -DCMAKE_CXX_COMPILER="clang++-5.0" -DCMAKE_CXX_FLAGS="-std=c++14 -stdlib=libc++" . && make && make install
+	 cd /usr/local/src/jsoncpp && cmake -DCMAKE_CXX_COMPILER="clang++" -DCMAKE_CXX_FLAGS="-std=c++14 -stdlib=libc++" . && make && make install
 
 
 	 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++"
