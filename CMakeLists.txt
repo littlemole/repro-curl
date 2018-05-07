@@ -59,8 +59,8 @@ IF (WIN32)
 	find_library(CURL_LIBRARY NAMES libcurl)
 	find_library(NG2HTTP_LIBRARY NAMES nghttp2)
 	find_library(LIBEVENT_LIBRARY NAMES event)
-    find_library(PRIOCPP_LIBRARY NAMES priocpp)
-    find_library(PRIOCPPD_LIBRARY NAMES priocppd)
+    	find_library(PRIOCPP_LIBRARY NAMES priocpp)
+    	find_library(PRIOCPPD_LIBRARY NAMES priocppd)
 
 
 	set(BUILDFLAGS "-await ${FLAGS}")
@@ -144,9 +144,6 @@ add_executable(Tests t/test.cpp)
 ############################################
 # libs for tests
 ############################################
-message("${LIBS}")
-message("${BACKEND}")
-message("${OSLIBS}")
 
 target_link_libraries(Tests ${LIBS} ${BACKEND} ${OSLIBS} )
 
