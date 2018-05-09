@@ -53,7 +53,7 @@ endif()
 
 IF (WIN32)
 
-if(NOT ${CMAKE_BUILD_TYPE})
+if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
@@ -75,13 +75,13 @@ message("+++++++++++++++++")
     else()
     	find_library(PRIOCPP_LIBRARY NAMES priocpp.lib)
     	find_library(PRIOCPPD_LIBRARY NAMES priocppd.lib)
-message("+++++++++++++++++")
-message("${PRIOCPP_LIBRARY}")
-message("${PRIOCPPD_LIBRARY}")
-message("+++++++++++++++++")
 
 		set(LIBS ${LIBS} debug ${CMAKE_PROJECT_NAME} optimized ${CMAKE_PROJECT_NAME} debug ${PRIOCPPD_LIBRARY} optimized  ${PRIOCPP_LIBRARY} )
 	endif()
+
+message("+++++++++++++++++")
+message("LIBS: ${LIBS}")
+message("+++++++++++++++++")
 
 
  ELSEIF (UNIX)
