@@ -89,7 +89,7 @@ TEST_F(BasicTest, SimpleHttp) {
 		});
 
 		theLoop().run();
-		curl_multi().dispose();
+		//curl_multi().dispose();
 	}
 
 
@@ -114,9 +114,18 @@ TEST_F(BasicTest, asyncTest)
 #endif
 		signal(SIGINT).then([](int s) { theLoop().exit(); });
 
-		coroutine_example().then([](){});
+		std::cout << "0:" << std::endl;
+
+		coroutine_example()
+		.then([](){})
+		.otherwise([](const std::exception& ex){});
+
+		std::cout << "-:" << std::endl;
 
 		theLoop().run();
+
+		std::cout << "+:" << std::endl;
+
 		curl_multi().dispose();
 	}
 
@@ -150,9 +159,12 @@ Future<> coroutine_example()
 
 	try {
 
+		std::cout << "1:" << std::endl;
 		auto req = async_curl()->url("https://www.google.de/");
+		std::cout << "2:" << std::endl;
 
 		CurlEasy::Ptr curl = co_await req->perform();
+		std::cout << "3:" << std::endl;
 
 		status = curl->status();
 		header = curl->response_header("server");

@@ -58,7 +58,7 @@ public:
     prio::IO io_read;
     prio::IO io_write;
 
-	typedef CurlEasy* Ptr;
+	typedef std::shared_ptr<CurlEasy> Ptr;
 	typedef repro::Promise<Ptr> PromiseType;
 	typedef repro::Future<Ptr> FutureType;
 
@@ -93,7 +93,7 @@ public:
 
     void resolve()
     {
-    	promise_.resolve(this);
+    	promise_.resolve(shared_from_this());
     	dispose();
     }
 
@@ -127,6 +127,7 @@ private:
     std::ostringstream oss_;
     headers_t response_headers_;
 
+    Ptr self_;
 };
 
 CurlEasy::Ptr async_curl();

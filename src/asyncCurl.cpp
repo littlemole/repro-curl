@@ -311,6 +311,12 @@ CurlEasy::CurlEasy()
 
 CurlEasy::~CurlEasy()
 {
+	if(easy_)
+	{
+		curl_easy_cleanup(easy_);
+		easy_ = nullptr;
+	}
+
     if(headers_ != NULL)
     {
         curl_slist_free_all((::curl_slist*)headers_ );
@@ -320,40 +326,38 @@ CurlEasy::~CurlEasy()
 
 CurlEasy::Ptr CurlEasy::create()
 {
-	Ptr ptr = Ptr(new CurlEasy());
+	//Ptr ptr = Ptr(new CurlEasy());
+	Ptr ptr = std::shared_ptr<CurlEasy>(new CurlEasy);
 	ptr->promise_ = repro::promise<Ptr>();
 	ptr->init();
+	ptr->self_ = ptr;
 	return ptr;
 }
 
 
 void CurlEasy::dispose()
 {
-  	curl_multi().remove(easy_); 
-	if(easy_)
-	{
-		curl_easy_cleanup(easy_);
-		easy_ = nullptr;
-	}
-	delete this;
+	self_.reset();
+	curl_multi().remove(easy_); 
+	//delete this;
 }
 
 CurlEasy::Ptr CurlEasy::insecure()
 {
 	 curl_easy_setopt(easy_, CURLOPT_SSL_VERIFYPEER, false);
-	 return this;
+	 return shared_from_this();
 }
 
 CurlEasy::Ptr CurlEasy::ca_path(const std::string& ca)
 {
 	 curl_easy_setopt(easy_, CURLOPT_CAPATH, ca.c_str() );
-	 return this;
+	 return shared_from_this();
 }
 
 CurlEasy::Ptr CurlEasy::ca_info(const std::string& ca)
 {
 	curl_easy_setopt(easy_, CURLOPT_CAINFO, ca.c_str());
-	return this;
+	return shared_from_this();
 }
 
 
@@ -363,6 +367,8 @@ Future<CurlEasy::Ptr> CurlEasy::perform()
 	{
 		init_request();
 	});
+	
+//	init_request();
 	return promise_.future();
 }
 
@@ -374,19 +380,19 @@ Future<CurlEasy::Ptr> CurlEasy::perform()
 CurlEasy::Ptr CurlEasy::url(const std::string& url)
 {
 	url_ = url;
-	return this;
+	return shared_from_this();
 }
 
 CurlEasy::Ptr CurlEasy::data( const std::string& formdata )
 {
 	formdata_ = formdata;
-	return this;
+	return shared_from_this();
 }
 
 CurlEasy::Ptr CurlEasy::method( const std::string& m )
 {
     method_ = m;
-	return this;
+	return shared_from_this();
 }
 
 CurlEasy::Ptr CurlEasy::header(const std::string& key, const std::string& val)
@@ -394,13 +400,13 @@ CurlEasy::Ptr CurlEasy::header(const std::string& key, const std::string& val)
     std::ostringstream oss;
     oss << key << ":" << val;
     headers_ = (impl::curl_slist*)curl_slist_append((::curl_slist*)headers_, oss.str().c_str() );
-	return this;
+	return shared_from_this();
 }
 
 CurlEasy::Ptr CurlEasy::verbose()
 {
     curl_easy_setopt(easy_, CURLOPT_VERBOSE, 1L);
-	return this;
+	return shared_from_this();
 }
 
 ///////////////////////////////////////////////////////////////
