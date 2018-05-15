@@ -62,6 +62,11 @@ TEST_F(BasicTest, SimpleHttp) {
 			status = curl->status();
 			header = curl->response_header("server");
 			// std::cout << curl->response_body() << std::endl;
+/*			return nextTick();
+		})
+		.then([]()
+		{
+*/			
 			return async_curl()
 			->url("https://www.amazon.de/")
 			->perform();
@@ -84,7 +89,7 @@ TEST_F(BasicTest, SimpleHttp) {
 		});
 
 		theLoop().run();
-		//curl_multi().dispose();
+		curl_multi().dispose();
 	}
 
 

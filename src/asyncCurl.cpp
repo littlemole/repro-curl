@@ -359,7 +359,10 @@ CurlEasy::Ptr CurlEasy::ca_info(const std::string& ca)
 
 Future<CurlEasy::Ptr> CurlEasy::perform()
 {
-	init_request();
+	nextTick( [this]()
+	{
+		init_request();
+	});
 	return promise_.future();
 }
 
