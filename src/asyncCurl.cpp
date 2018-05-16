@@ -337,8 +337,8 @@ CurlEasy::Ptr CurlEasy::create()
 
 void CurlEasy::dispose()
 {
-	self_.reset();
 	curl_multi().remove(easy_); 
+	self_.reset();
 	//delete this;
 }
 
