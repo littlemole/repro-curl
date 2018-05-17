@@ -26,7 +26,26 @@
 using namespace prio;
 using namespace reprocurl;
 
+#ifdef _RESUMABLE_FUNCTIONS_SUPPORTED
 
+
+repro::Future<> fetch_url(const std::string& url)
+{
+#ifndef _WIN32
+		signal(SIGPIPE).then([](int s){ std::cout << "SIGPIPE" << std::endl;});
+#endif
+		signal(SIGINT).then([](int s) { theLoop().exit(); });
+	
+		auto curl = async_curl()->url(url)->verbose();
+
+		CurlEasy::Ptr result = co_await curl->perform();
+
+		std::cout << result->response_body();
+
+		theLoop().exit();
+}
+
+#else
 
 void fetch_url(const std::string& url)
 {
@@ -52,6 +71,8 @@ void fetch_url(const std::string& url)
 
 	}
 }
+
+#endif
 
 int main(int argc, char **argv) 
 {
