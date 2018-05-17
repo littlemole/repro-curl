@@ -98,7 +98,7 @@ message("+++++++++++++++++")
 
     set(BUILDFLAGS " ${FLAGS}")
 
-    set(LIBS debug priocpp optimized priocpp ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NG2HTTP_LIBRARY} ${CURL_LIBRARIES} ${STDLIB}  )
+    set(LIBS debug priocpp optimized priocpp ${GTEST_LIBRARIES} ${OPENSSL_LIBRARIES} ${NGHTTP2_LIBRARY} ${CURL_LIBRARIES} ${STDLIB}  )
 
     set(LIBS debug ${CMAKE_PROJECT_NAME} optimized ${CMAKE_PROJECT_NAME} ${LIBS} )
 
