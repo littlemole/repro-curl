@@ -363,9 +363,10 @@ CurlEasy::Ptr CurlEasy::ca_info(const std::string& ca)
 
 Future<CurlEasy::Ptr> CurlEasy::perform()
 {
-	nextTick( [this]()
+	auto ptr = shared_from_this();
+	nextTick( [ptr]()
 	{
-		init_request();
+		ptr->init_request();
 	});
 	
 //	init_request();

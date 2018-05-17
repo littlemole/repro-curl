@@ -156,6 +156,10 @@ add_library(${CMAKE_PROJECT_NAME}  STATIC ${SOURCES})
 
 add_executable(Tests t/test.cpp)
 
+IF (WIN32)
+	set_source_files_properties(t/test.cpp PROPERTIES COMPILE_FLAGS /Ob0)
+ENDIF()
+
 ############################################
 # libs for tests
 ############################################
