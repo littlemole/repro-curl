@@ -47,6 +47,8 @@ public:
 	std::string content_type();
 	std::string header(const std::string& key);
 
+	std::vector<std::pair<std::string, std::string>> headers();
+
 private:
 	CurlEasy::Ptr curl_;
 };

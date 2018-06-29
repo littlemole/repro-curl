@@ -92,6 +92,10 @@ std::string response::header(const std::string& key)
 	return curl_->response_header(key);
 }
 
+std::vector<std::pair<std::string, std::string>> response::headers()
+{
+	return curl_->response_headers();
+}
 
 Future<response> fetch(request& req)
 {
