@@ -6,6 +6,7 @@
 #define strcasecmp _stricmp
 #endif
 
+using namespace repro;
 using namespace prio;
 
 namespace reprocurl   	{

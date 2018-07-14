@@ -55,6 +55,8 @@ private:
 
 void init();
 
+repro::Future<std::vector<response>> fetch_all(const std::vector<request>& requests);
+
 }
 
 #endif

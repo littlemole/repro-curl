@@ -12,6 +12,7 @@
 #endif
 
 
+using namespace repro;
 using namespace prio;
 using namespace reprocurl;
 
@@ -127,6 +128,91 @@ TEST_F(APITest, asyncTest)
 
 #endif
 
+
+TEST_F(APITest, SimpleHttp2) 
+{
+
+#ifndef _WIN32
+	signal(SIGPIPE).then([](int s){ std::cout << "SIGPIPE" << std::endl;});
+#endif
+	signal(SIGINT).then([](int s) { theLoop().exit(); });
+
+	int status = 200;
+	{
+        auto req1 = request(prio::Url("https://www.amazon.de/"));
+        auto req2 = request(prio::Url("https://www.amazon.de/"));
+
+		std::vector<request> requests {req1,req2};
+
+		fetch_all(requests)
+		.then([&status](std::vector<response> responses)
+		{
+			for ( auto& r : responses)
+			{
+				if(status==200) status = r.status();
+			}
+
+			theLoop().exit();
+		})
+		.otherwise([](const std::exception& ex)
+		{
+			std::cout << ex.what() << std::endl;
+		});
+
+		theLoop().run();
+
+        // can only call that once
+		//curl_multi().dispose();
+	}
+
+	EXPECT_EQ(200,status);
+    // we did not call curl_multi().dispose(), so this won't assert
+    //MOL_TEST_ASSERT_CNTS(0, 0);
+}
+
+TEST_F(APITest, SimpleHttp3) 
+{
+
+#ifndef _WIN32
+	signal(SIGPIPE).then([](int s){ std::cout << "SIGPIPE" << std::endl;});
+#endif
+	signal(SIGINT).then([](int s) { theLoop().exit(); });
+
+	int status = 200;
+	{
+        auto req1 = request(prio::Url("https://www.amazon.de/"));
+        auto req2 = request(prio::Url("https://www.amazon.de/"));
+
+		after(
+			fetch(req1),
+			fetch(req2)
+		)
+		.then([&status](std::tuple<response,response> responses)
+		{
+			response res1;
+			response res2;
+			std::tie(res1,res2) = responses;
+
+			if(status==200) status = res1.status();
+			if(status==200) status = res2.status();
+
+			theLoop().exit();
+		})
+		.otherwise([](const std::exception& ex)
+		{
+			std::cout << ex.what() << std::endl;
+		});
+
+		theLoop().run();
+
+        // can only call that once
+		//curl_multi().dispose();
+	}
+
+	EXPECT_EQ(200,status);
+    // we did not call curl_multi().dispose(), so this won't assert
+    //MOL_TEST_ASSERT_CNTS(0, 0);
+}
 
 int main(int argc, char **argv) 
 {

@@ -2,6 +2,7 @@
 #include <curl/curl.h>
 
 using namespace prio;
+using namespace repro;
  
 namespace reprocurl {
 
@@ -128,5 +129,40 @@ Future<response> fetch(request& req)
 	return p.future();
 
 }
+
+Future<std::vector<response>> fetch_all(const std::vector<request>& requests)
+{
+	auto p = promise<std::vector<response>>();
+
+	std::shared_ptr<std::vector<response>> responses = std::make_shared<std::vector<response>>();
+	std::shared_ptr<int> cnt = std::make_shared<int>( 0 );
+	responses->resize(requests.size());
+
+	for( auto r : requests)
+	{
+		int i = *cnt;
+		(*cnt)++;
+
+		fetch(r)
+		.then([p,responses,i,cnt](response res)
+		{
+			(*responses)[i] = res;
+			(*cnt)--;
+
+			if( (*cnt) == 0)
+			{
+				p.resolve(*responses);
+			}
+		})
+		.otherwise([p](const std::exception& ex)
+		{
+			p.reject(ex);
+		});
+
+	}
+
+	return p.future();
+}
+
 
 } // end namespaces
