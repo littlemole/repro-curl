@@ -207,7 +207,9 @@ void CurlMulti::onTimer()
 int CurlMulti::on_sock_cb(CURL *curl, impl::socket_t sock, int what, CurlEasy* easy)
 {
 	easy->what_ = what;
-	timeout_->cancel();
+
+	if(timeout_)
+		timeout_->cancel();
 
 	if (what & CURL_POLL_REMOVE)
 	{
@@ -261,6 +263,9 @@ int CurlMulti::on_sock_cb(CURL *curl, impl::socket_t sock, int what, CurlEasy* e
 
 int CurlMulti::on_multi_timer_cb(CURLM *multi, long timeout_ms)
 {
+	if(!timeout_)
+		return 0;
+
 	timeout_->cancel();
 	if(timeout_ms == -1)
 	{
@@ -292,6 +297,9 @@ int CurlMulti::sock_cb(CURL *e, impl::socket_t s, int what, void *cbp, void *soc
 int CurlMulti::multi_timer_cb(CURLM *multi, long timeout_ms,void* cbp)
 {
 	CurlMulti *curl = (CurlMulti*) cbp;
+
+	if(!curl)
+		return 0;
 
 	return curl->on_multi_timer_cb(multi,timeout_ms);
 }
