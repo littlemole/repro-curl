@@ -24,6 +24,7 @@
 #endif
 
 
+using namespace repro;
 using namespace prio;
 using namespace reprocurl;
 
