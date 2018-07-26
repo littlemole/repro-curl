@@ -17,7 +17,7 @@ using namespace prio;
 using namespace reprocurl;
 
 
-class APITest : public ::testing::Test {
+class AsyncTest : public ::testing::Test {
  protected:
 
   virtual void SetUp() 
@@ -29,8 +29,44 @@ class APITest : public ::testing::Test {
 
 
 
+#ifdef _RESUMABLE_FUNCTIONS_SUPPORTED
 
-TEST_F(APITest, SimpleHttp) 
+Future<> coroutine_example()
+{
+	try 
+    {
+        request req(prio::Url("https://www.google.de/"));
+
+        response res = co_await fetch(req);
+std::cout << "1<<<<<<<<<<<<<" << std::endl;
+    	int status = res.status();
+		std::string header = res.header("server");
+std::cout << "2<<<<<<<<<<<<<" << std::endl;
+
+    
+    	//EXPECT_EQ(200,status);
+	   // EXPECT_EQ("gws",header);
+    
+		nextTick([](){
+			theLoop().exit();
+		});
+    }
+	catch (const std::exception& ex)
+	{
+        std::cout << "0<<<<<<<<<<<<<" << std::endl;
+		std::cout << ex.what() << std::endl;
+		theLoop().exit();
+	}
+    catch (...)
+	{
+        std::cout << "oioioi" << std::endl;
+		theLoop().exit();
+	};
+    //co_return 42;
+}
+
+
+TEST_F(AsyncTest, asyncTest)
 {
 
 #ifndef _WIN32
@@ -38,38 +74,18 @@ TEST_F(APITest, SimpleHttp)
 #endif
 	signal(SIGINT).then([](int s) { theLoop().exit(); });
 
-	int status = 0;
-	std::string header;
 	{
-        auto req = request(prio::Url("https://www.amazon.de/"));
-
-        fetch(req)
-        .then([&status,&header](response res)
-        {
-			status = res.status();
-			header = res.header("server");
-
-			return  timeout(1,0);
-		})
-		.then( []()
-		{
-			theLoop().exit();
-		})
-		.otherwise([](const std::exception& ex)
-		{
-			std::cout << ex.what() << std::endl;
-		});
+		coroutine_example().then([](){});
 
 		theLoop().run();
-
 		curl_multi().dispose();
 	}
 
-	EXPECT_EQ(200,status);
-	EXPECT_EQ("Server",header);
 	MOL_TEST_ASSERT_CNTS(0, 0);
 }
 
+
+#endif
 
 int main(int argc, char **argv) 
 {

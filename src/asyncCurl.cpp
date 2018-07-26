@@ -224,6 +224,7 @@ int CurlMulti::on_sock_cb(CURL *curl, impl::socket_t sock, int what, CurlEasy* e
 	if (what & CURL_POLL_IN)
 	{
 		easy->io_write.cancel();
+		easy->io_read.cancel();
 		easy->io_read.onRead(sock)
 		.then( [this,curl,sock,what,easy]()
 		{	
@@ -242,6 +243,7 @@ int CurlMulti::on_sock_cb(CURL *curl, impl::socket_t sock, int what, CurlEasy* e
 	if (what & CURL_POLL_OUT)
 	{			
 		easy->io_read.cancel();
+		easy->io_write.cancel();
 		easy->io_write.onWrite(sock)
 		.then( [this,curl,sock,what,easy]()
 		{	

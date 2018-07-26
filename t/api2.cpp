@@ -17,7 +17,7 @@ using namespace prio;
 using namespace reprocurl;
 
 
-class APITest : public ::testing::Test {
+class API2Test : public ::testing::Test {
  protected:
 
   virtual void SetUp() 
@@ -30,7 +30,7 @@ class APITest : public ::testing::Test {
 
 
 
-TEST_F(APITest, SimpleHttp) 
+TEST_F(API2Test, SimpleHttp2) 
 {
 
 #ifndef _WIN32
@@ -38,21 +38,21 @@ TEST_F(APITest, SimpleHttp)
 #endif
 	signal(SIGINT).then([](int s) { theLoop().exit(); });
 
-	int status = 0;
-	std::string header;
+	int status = 200;
 	{
-        auto req = request(prio::Url("https://www.amazon.de/"));
+	        auto req1 = request(prio::Url("https://www.amazon.de/"));
+	        auto req2 = request(prio::Url("https://www.amazon.de/"));
 
-        fetch(req)
-        .then([&status,&header](response res)
-        {
-			status = res.status();
-			header = res.header("server");
+		std::vector<request> requests {req1,req2};
 
-			return  timeout(1,0);
-		})
-		.then( []()
+		fetch_all(requests)
+		.then([&status](std::vector<response> responses)
 		{
+			for ( auto& r : responses)
+			{
+				if(status==200) status = r.status();
+			}
+
 			theLoop().exit();
 		})
 		.otherwise([](const std::exception& ex)
@@ -62,14 +62,13 @@ TEST_F(APITest, SimpleHttp)
 
 		theLoop().run();
 
+	        // can only call that once
 		curl_multi().dispose();
 	}
 
 	EXPECT_EQ(200,status);
-	EXPECT_EQ("Server",header);
 	MOL_TEST_ASSERT_CNTS(0, 0);
 }
-
 
 int main(int argc, char **argv) 
 {

@@ -144,7 +144,7 @@ Future<std::vector<response>> fetch_all(const std::vector<request>& requests)
 		(*cnt)++;
 
 		fetch(r)
-		.then([p,responses,i,cnt](response res)
+		.then([p,responses,i,cnt](response res) mutable
 		{
 			(*responses)[i] = res;
 			(*cnt)--;
@@ -152,6 +152,7 @@ Future<std::vector<response>> fetch_all(const std::vector<request>& requests)
 			if( (*cnt) == 0)
 			{
 				p.resolve(*responses);
+				responses->clear();
 			}
 		})
 		.otherwise([p](const std::exception& ex)
