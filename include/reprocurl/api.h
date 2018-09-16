@@ -27,12 +27,15 @@ public:
 	request& content_type(const std::string& value);
 	request& accept(const std::string& value);
 	request& user_agent(const std::string& value);
+	request& insecure();
+	
 
 private:
 	std::string method_;
 	prio::Url url_; 
 	std::string payload_;
 	std::vector<std::pair<std::string, std::string>> headers_;
+	bool insecure_ = false;
 };
 
 class response

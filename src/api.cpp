@@ -65,6 +65,11 @@ request& request::user_agent(const std::string& value)
 	return *this;
 }
 
+request& request::insecure()
+{
+	insecure_ = true;
+	return *this;
+}
 
 response::response()
 {}
@@ -114,6 +119,11 @@ Future<response> fetch(request& req)
 	for (auto h : req.headers_)
 	{
 		curl->header(h.first, h.second);
+	}
+
+	if ( req.insecure_)
+	{
+		curl->insecure();
 	}
 
 	curl->perform()
