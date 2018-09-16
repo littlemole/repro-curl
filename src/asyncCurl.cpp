@@ -148,6 +148,7 @@ bool CurlMulti::check_err_code(const char *where, int code)
 	{
 		const char *s;
 		switch (code)
+
 		{
 			case     CURLM_BAD_HANDLE:         s="CURLM_BAD_HANDLE";         break;
 			case     CURLM_BAD_EASY_HANDLE:    s="CURLM_BAD_EASY_HANDLE";    break;
@@ -356,6 +357,7 @@ void CurlEasy::dispose()
 CurlEasy::Ptr CurlEasy::insecure()
 {
 	 curl_easy_setopt(easy_, CURLOPT_SSL_VERIFYPEER, false);
+	 curl_easy_setopt(easy_, CURLOPT_SSL_VERIFYHOST, false);
 	 return shared_from_this();
 }
 
