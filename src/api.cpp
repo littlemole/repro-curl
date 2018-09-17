@@ -71,6 +71,12 @@ request& request::insecure()
 	return *this;
 }
 
+request& request::verbose()
+{
+	verbose_ = true;
+	return *this;
+}
+
 response::response()
 {}
 
@@ -124,6 +130,11 @@ Future<response> fetch(request& req)
 	if ( req.insecure_)
 	{
 		curl->insecure();
+	}
+
+	if ( req.verbose_)
+	{
+		curl->verbose();
 	}
 
 	curl->perform()

@@ -28,6 +28,7 @@ public:
 	request& accept(const std::string& value);
 	request& user_agent(const std::string& value);
 	request& insecure();
+	request& verbose();
 	
 
 private:
@@ -36,6 +37,7 @@ private:
 	std::string payload_;
 	std::vector<std::pair<std::string, std::string>> headers_;
 	bool insecure_ = false;
+	bool verbose_ = false;
 };
 
 class response
