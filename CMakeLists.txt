@@ -155,6 +155,7 @@ add_library(${CMAKE_PROJECT_NAME}  STATIC ${SOURCES})
 ############################################
 
 add_executable(Tests t/test.cpp)
+add_executable(Api t/api.cpp)
 
 IF (WIN32)
 	set_source_files_properties(t/test.cpp PROPERTIES COMPILE_FLAGS /Ob0)
@@ -165,6 +166,7 @@ ENDIF()
 ############################################
 
 target_link_libraries(Tests ${LIBS} ${BACKEND} ${OSLIBS} )
+target_link_libraries(Api ${LIBS} ${BACKEND} ${OSLIBS} )
 
 ############################################
 # run tests
@@ -172,6 +174,7 @@ target_link_libraries(Tests ${LIBS} ${BACKEND} ${OSLIBS} )
 
 
 add_test(NAME AllTests COMMAND Tests)
+add_test(NAME ApiTests COMMAND Api)
 
 file(COPY pem DESTINATION .)
  
