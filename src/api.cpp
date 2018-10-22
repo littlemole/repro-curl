@@ -6,7 +6,7 @@ using namespace repro;
  
 namespace reprocurl {
 
-void init()
+ReproCurl::ReproCurl()
 {
 	curl_global_init(CURL_GLOBAL_ALL);
 }

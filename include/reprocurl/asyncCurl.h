@@ -133,6 +133,11 @@ private:
 CurlEasy::Ptr async_curl();
 
 
+class ReproCurl
+{
+public:
+	ReproCurl();
+};
 
 
 } // close namespaces

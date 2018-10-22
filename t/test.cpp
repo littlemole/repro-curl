@@ -142,9 +142,10 @@ TEST_F(BasicTest, asyncTest)
 
 int main(int argc, char **argv) 
 {
-	prio::init();
+	prio::Libraries<prio::EventLoop, ReproCurl> init;
+
 	OpenSSL_add_all_algorithms();
-	curl_global_init(CURL_GLOBAL_ALL);
+
     ::testing::InitGoogleTest(&argc, argv);
     int r = RUN_ALL_TESTS();
 

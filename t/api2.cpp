@@ -73,9 +73,10 @@ TEST_F(API2Test, SimpleHttp2)
 int main(int argc, char **argv) 
 {
 
-	prio::init();
+	prio::Libraries<prio::EventLoop, ReproCurl> init;
+
 	OpenSSL_add_all_algorithms();
-    reprocurl::init();
+
 
 
     ::testing::InitGoogleTest(&argc, argv);
