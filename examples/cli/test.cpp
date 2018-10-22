@@ -76,9 +76,9 @@ void fetch_url(const std::string& url)
 
 int main(int argc, char **argv) 
 {
-	prio::init();
+	prio::Libraries<prio::EventLoop,reprocurl::ReproCurl> init;
+
 	OpenSSL_add_all_algorithms();
-	curl_global_init(CURL_GLOBAL_ALL);
 
 	if(argc < 2 )
 	{
