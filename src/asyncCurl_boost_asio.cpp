@@ -47,9 +47,9 @@ static curl_socket_t opensocket(void *clientp, curlsocktype purpose,
   return sockfd;
 }
 
-static int close_socket(void *clientp, curl_socket_t item)
+static int close_socket(void *clientp, impl::socket_t item)
 {
-  std::map<curl_socket_t, boost::asio::ip::tcp::socket *>::iterator it = socket_map.find(item);
+  std::map<impl::socket_t, boost::asio::ip::tcp::socket *>::iterator it = socket_map.find(item);
  
   if(it != socket_map.end()) 
   {
