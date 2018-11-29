@@ -125,7 +125,12 @@ if(WITH_LIBEVENT)
     set(BACKEND ${LIBEVENT_LIBRARY})
 else()
     add_definitions(-DPROMISE_USE_BOOST_ASIO)
+if (WIN32)
+find_package( Boost COMPONENTS system date_time  REQUIRED )
+    set(BACKEND "Boost::system" "Boost::date_time")
+else()
     set(BACKEND "boost_system")
+endif()
 endif()
 
 ############################################
