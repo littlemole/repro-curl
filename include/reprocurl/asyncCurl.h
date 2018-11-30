@@ -4,6 +4,7 @@
 #include "reprocurl/common.h"
 #include "priocpp/api.h"
  
+ 
 //////////////////////////////////////////////////////////////
 
 
@@ -55,8 +56,10 @@ class CurlEasy : public std::enable_shared_from_this<CurlEasy>
 {
 public:
 
+#ifdef PROMISE_USE_LIBEVENT
     prio::IO io_read;
     prio::IO io_write;
+#endif    
 
 	typedef std::shared_ptr<CurlEasy> Ptr;
 	typedef repro::Promise<Ptr> PromiseType;

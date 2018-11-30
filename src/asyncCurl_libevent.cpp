@@ -1,3 +1,5 @@
+#ifdef PROMISE_USE_LIBEVENT
+
 #include <curl/curl.h>
 #include <reprocurl/asyncCurl.h>
 #include <iostream>
@@ -585,3 +587,4 @@ size_t CurlEasy::rcvHeaders_cb(void *buffer, size_t size, size_t nmemb, void *us
 } // close namespaces
 
 
+#endif
