@@ -152,7 +152,7 @@ bool CurlMulti::check_multi_info()
 {
 	CURL* easy    = 0;
 	CURLMsg* msg  = 0;
-	CURLcode r;
+	CURLcode r    = CURLE_OK;
 	int msgs_left = 0;
 
 	while ((msg = curl_multi_info_read(multi_, &msgs_left)))
