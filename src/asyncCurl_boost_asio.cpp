@@ -171,7 +171,9 @@ bool CurlMulti::check_multi_info()
 		curl_easy_getinfo(easy,CURLINFO_PRIVATE,(char**)&ceasy);
 		if ( r != CURLE_OK )
 		{
-			repro::Ex ex("async curl ex");
+			std::ostringstream oss;
+			oss << "async curl ex " << r << " " << curl_easy_strerror(r);
+			repro::Ex ex(oss.str());
 			ceasy->reject(ex);
 			return true;
 		}
