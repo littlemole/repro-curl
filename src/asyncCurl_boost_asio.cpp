@@ -166,6 +166,7 @@ bool CurlMulti::check_multi_info()
 
 	if(easy) // we are done
 	{
+		timeout_->cancel();
 		CurlEasy* ceasy = nullptr;
 		curl_easy_getinfo(easy,CURLINFO_PRIVATE,(char**)&ceasy);
 		if ( r != CURLE_OK )
