@@ -294,6 +294,10 @@ int CurlMulti::sock_cb(CURL *e, impl::socket_t s, int what, void *cbp, void *soc
 
 	CurlEasy* ceasy = nullptr;
 	curl_easy_getinfo(e,CURLINFO_PRIVATE,(char**)&ceasy);
+	if(!ceasy)
+	{
+		return 0;
+	}
 
 	return curl->on_sock_cb(e,s,what,ceasy);
 }
@@ -352,6 +356,7 @@ CurlEasy::Ptr CurlEasy::create()
 void CurlEasy::dispose()
 {
 	curl_multi().remove(easy_); 
+	curl_easy_setopt(easy_,CURLOPT_PRIVATE,nullptr);
 	self_.reset();
 	//delete this;
 }
