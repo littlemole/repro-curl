@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "reprocpp/after.h"
-#include "test.h"
+#include "reprocpp/test.h"
 #include "priocpp/api.h"
 #include "priocpp/task.h"
 #include <reprocurl/api.h>
