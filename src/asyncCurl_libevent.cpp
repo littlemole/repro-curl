@@ -526,7 +526,8 @@ void CurlEasy::init_request()
 		return;
 	}
 
-	curl_multi().perform();
+	// ???? 
+	// curl_multi().perform();
 
 }
 
