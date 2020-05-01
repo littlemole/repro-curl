@@ -1,5 +1,5 @@
 # This is a comment
-FROM littlemole/devenv_gpp_make
+FROM littlemole/devenv_clangpp_make
 MAINTAINER me <little.mole@oha7.org>
 
 ARG CXX=g++
@@ -14,8 +14,8 @@ ENV BUILDCHAIN=${BUILDCHAIN}
 ARG TS=
 ENV TS=${TS}
 
-RUN /usr/local/bin/install.sh repro 
-RUN /usr/local/bin/install.sh prio
+RUN BRANCH=ng /usr/local/bin/install.sh repro 
+RUN BRANCH=ng /usr/local/bin/install.sh prio
 
 # build an install this project
 RUN mkdir -p /usr/local/src/repro-curl

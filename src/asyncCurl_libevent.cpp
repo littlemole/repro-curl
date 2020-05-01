@@ -324,6 +324,7 @@ CurlEasy::CurlEasy()
 	  easy_(nullptr),
 	  headers_(NULL)
 {
+	REPRO_MONITOR_INCR(curl);
 }
 
 
@@ -340,6 +341,7 @@ CurlEasy::~CurlEasy()
         curl_slist_free_all((::curl_slist*)headers_ );
         headers_ =NULL;
     }	
+	REPRO_MONITOR_DECR(curl);
 }
 
 CurlEasy::Ptr CurlEasy::create()
@@ -522,8 +524,8 @@ void CurlEasy::init_request()
 	if(!curl_multi().add(easy_))
 	{
 		// handle err
-		rejected(promise_,repro::Ex("add multi failed"));
-		return;
+		promise_.reject(repro::Ex("add multi failed"));
+//		return;
 	}
 
 	// ???? 

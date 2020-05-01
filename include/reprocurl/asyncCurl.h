@@ -56,7 +56,6 @@ class CurlEasy : public std::enable_shared_from_this<CurlEasy>
 {
 public:
 
-LITTLE_MOLE_MONITOR(CurlEasys);
 
 #ifdef PROMISE_USE_LIBEVENT
     prio::IO io_read;
@@ -108,6 +107,8 @@ LITTLE_MOLE_MONITOR(CurlEasys);
 private:
 
     CurlEasy();
+    CurlEasy(const CurlEasy&) = delete;
+    CurlEasy& operator=(const CurlEasy&) = delete;
 
     void init();
     void init_request();
