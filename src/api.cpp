@@ -142,10 +142,7 @@ Future<response> fetch(request& req)
 	{
 		p.resolve(response(curl));
 	})
-		.otherwise([p](const std::exception& ex)
-	{
-		p.reject(ex);
-	});
+		.otherwise(reject(p));
 
 	return p.future();
 
@@ -176,10 +173,7 @@ Future<std::vector<response>> fetch_all(const std::vector<request>& requests)
 				responses->clear();
 			}
 		})
-		.otherwise([p](const std::exception& ex)
-		{
-			p.reject(ex);
-		});
+		.otherwise(reject(p));
 
 	}
 
