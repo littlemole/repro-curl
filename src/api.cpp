@@ -26,11 +26,13 @@ request::request(const Url& url)
 request& request::ca_file(const std::string& value)
 {
 	ca_file_ = value;
+	return *this;
 }
 
 request& request::client_cert(const std::string& value)
 {
 	client_cert_ = value;
+	return *this;
 }
 
 request& request::url(const Url& url)
