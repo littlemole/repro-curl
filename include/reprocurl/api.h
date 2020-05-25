@@ -29,9 +29,13 @@ public:
 	request& user_agent(const std::string& value);
 	request& insecure();
 	request& verbose();
-	
+	request& ca_file(const std::string& value);
+	request& client_cert(const std::string& value);
+
 
 private:
+	std::string ca_file_;
+	std::string client_cert_;
 	std::string method_;
 	prio::Url url_; 
 	std::string payload_;

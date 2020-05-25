@@ -80,6 +80,7 @@ public:
     Ptr insecure();
     Ptr ca_path(const std::string& ca);
 	Ptr ca_info(const std::string& ca);
+	Ptr client_cert(const std::string& ca);
 
     repro::Future<Ptr> perform();
 

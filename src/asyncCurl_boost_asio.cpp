@@ -432,6 +432,12 @@ CurlEasy::Ptr CurlEasy::ca_info(const std::string& ca)
 }
 
 
+CurlEasy::Ptr CurlEasy::client_cert(const std::string& cert)
+{
+	curl_easy_setopt(easy_, CURLOPT_SSLCERT, cert.c_str());
+	return shared_from_this();
+}
+
 Future<CurlEasy::Ptr> CurlEasy::perform()
 {
 	auto ptr = shared_from_this();

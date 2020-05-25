@@ -23,6 +23,16 @@ request::request(const Url& url)
 
 }
 
+request& request::ca_file(const std::string& value)
+{
+	ca_file_ = value;
+}
+
+request& request::client_cert(const std::string& value)
+{
+	client_cert_ = value;
+}
+
 request& request::url(const Url& url)
 {
 	url_ = url;
@@ -135,6 +145,16 @@ Future<response> fetch(request& req)
 	if ( req.verbose_)
 	{
 		curl->verbose();
+	}
+
+	if (!req.ca_file_.empty())
+	{
+		curl->ca_info(req.ca_file_);
+	}
+
+	if (!req.client_cert_.empty())
+	{
+		curl->client_cert(req.client_cert_);
 	}
 
 	curl->perform()
