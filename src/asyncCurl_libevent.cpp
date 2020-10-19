@@ -514,6 +514,8 @@ void CurlEasy::init_request()
 		curl_easy_setopt(easy_, CURLOPT_CUSTOMREQUEST, method_.c_str() );
 	}
 
+	curl_easy_setopt(easy_, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+
 	if(!curl_multi().add(easy_))
 	{
 		// handle err
