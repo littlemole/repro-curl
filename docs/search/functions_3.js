@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['future',['future',['../../../repro/classrepro_1_1PromiseMixin.html#a47ce15334ede44f3586e011600872197',1,'repro::PromiseMixin::future()'],['../../../repro/classrepro_1_1PromiseMixin.html#a47ce15334ede44f3586e011600872197',1,'PromiseMixin&lt; Args... &gt;::future()']]]
+  ['iseventthread_87',['isEventThread',['../../../prio/classprio_1_1Loop.html#ad51d66b85c051f026a0b3a072b7b9887',1,'prio::Loop']]],
+  ['ishttp2requested_88',['isHttp2Requested',['../../../prio/classprio_1_1Connection.html#a55d0920bd20340b94c5c9dc34cefcf4e',1,'prio::Connection']]]
 ];

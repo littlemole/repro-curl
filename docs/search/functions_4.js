@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['iseventthread',['isEventThread',['../../../prio/classprio_1_1Loop.html#ad51d66b85c051f026a0b3a072b7b9887',1,'prio::Loop']]],
-  ['ishttp2requested',['isHttp2Requested',['../../../prio/classprio_1_1Connection.html#a55d0920bd20340b94c5c9dc34cefcf4e',1,'prio::Connection']]]
+  ['load_5fcert_5fpem_89',['load_cert_pem',['../../../prio/classprio_1_1SslCtx.html#aac75b8c7835fcbe7c76bb55a3ec0e131',1,'prio::SslCtx']]]
 ];
