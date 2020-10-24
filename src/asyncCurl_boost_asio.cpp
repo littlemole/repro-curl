@@ -409,7 +409,6 @@ void CurlEasy::dispose()
 	curl_easy_setopt(easy_,CURLOPT_PRIVATE,nullptr);
 
 	self_.reset();
-	//delete this;
 }
 
 CurlEasy::Ptr CurlEasy::insecure()
@@ -446,7 +445,6 @@ Future<CurlEasy::Ptr> CurlEasy::perform()
 		ptr->init_request();
 	});
 	
-//	init_request();
 	return promise_.future();
 }
 
@@ -549,8 +547,6 @@ void CurlEasy::reset()
 
 void CurlEasy::init_request()
 {
-	//reset();
-
 	curl_easy_setopt(easy_, CURLOPT_NOSIGNAL,1L);
 
 	curl_easy_setopt(easy_, CURLOPT_HTTPHEADER, headers_);
@@ -585,9 +581,6 @@ void CurlEasy::init_request()
 		promise_.reject(repro::Ex("add multi failed"));
 		return;
 	}
-
-	//curl_multi().perform();
-
 }
 
 ///////////////////////////////////////////////////////////////
@@ -631,7 +624,6 @@ size_t CurlEasy::on_rcvHeaders_cb(void *buffer, size_t size, size_t nmemb)
 }
 
 
-//--------------
 
 // WRITEDATA on easy
 int CurlEasy::write_cb(void *data, size_t size, size_t nmemb, void* userp)

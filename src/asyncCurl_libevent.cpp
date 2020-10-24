@@ -346,7 +346,6 @@ CurlEasy::~CurlEasy()
 
 CurlEasy::Ptr CurlEasy::create()
 {
-	//Ptr ptr = Ptr(new CurlEasy());
 	Ptr ptr = std::shared_ptr<CurlEasy>(new CurlEasy);
 	ptr->promise_ = repro::promise<Ptr>();
 	ptr->init();
@@ -360,7 +359,6 @@ void CurlEasy::dispose()
 	curl_multi().remove(easy_); 
 	curl_easy_setopt(easy_,CURLOPT_PRIVATE,nullptr);
 	self_.reset();
-	//delete this;
 }
 
 CurlEasy::Ptr CurlEasy::insecure()
@@ -397,7 +395,6 @@ Future<CurlEasy::Ptr> CurlEasy::perform()
 		ptr->init_request();
 	});
 	
-//	init_request();
 	return promise_.future();
 }
 
@@ -500,16 +497,10 @@ void CurlEasy::reset()
 
 void CurlEasy::init_request()
 {
-	//reset();
-
 	curl_easy_setopt(easy_, CURLOPT_NOSIGNAL,1L);
-
 	curl_easy_setopt(easy_, CURLOPT_HTTPHEADER, headers_);
-
     curl_easy_setopt(easy_, CURLOPT_HEADERFUNCTION, &rcvHeaders_cb);
-
     curl_easy_setopt(easy_, CURLOPT_WRITEHEADER, this);
-
 
 	curl_easy_setopt(easy_, CURLOPT_URL, url_.c_str());
 	curl_easy_setopt(easy_, CURLOPT_WRITEFUNCTION, &write_cb);
@@ -531,12 +522,7 @@ void CurlEasy::init_request()
 	{
 		// handle err
 		promise_.reject(repro::Ex("add multi failed"));
-//		return;
 	}
-
-	// ???? 
-	// curl_multi().perform();
-
 }
 
 ///////////////////////////////////////////////////////////////
@@ -579,8 +565,6 @@ size_t CurlEasy::on_rcvHeaders_cb(void *buffer, size_t size, size_t nmemb)
     return len;
 }
 
-
-//--------------
 
 // WRITEDATA on easy
 int CurlEasy::write_cb(void *data, size_t size, size_t nmemb, void* userp)
